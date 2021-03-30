@@ -30,18 +30,19 @@ func Serve(port int) *http.Server {
 
 // Handlers register debug handlers on router
 func Handlers(router *mux.Router) *mux.Router {
-	router.HandleFunc("/debug/pprof/", pprof.Index)
-	router.HandleFunc("/debug/pprof/allocs", pprof.Cmdline)
-	router.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
-	router.HandleFunc("/debug/pprof/profile", pprof.Profile)
-	router.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
-	router.HandleFunc("/debug/pprof/trace", pprof.Trace)
+	r := router.PathPrefix("/debug/pprof/").Subrouter()
+	r.HandleFunc("/", pprof.Index)
+	r.HandleFunc("/allocs", pprof.Cmdline)
+	r.HandleFunc("/cmdline", pprof.Cmdline)
+	r.HandleFunc("/profile", pprof.Profile)
+	r.HandleFunc("/symbol", pprof.Symbol)
+	r.HandleFunc("/trace", pprof.Trace)
 
-	router.Handle("/debug/pprof/mutex", pprof.Handler("mutex"))
-	router.Handle("/debug/pprof/goroutine", pprof.Handler("goroutine"))
-	router.Handle("/debug/pprof/heap", pprof.Handler("heap"))
-	router.Handle("/debug/pprof/threadcreate", pprof.Handler("threadcreate"))
-	router.Handle("/debug/pprof/block", pprof.Handler("block"))
+	r.Handle("/mutex", pprof.Handler("mutex"))
+	r.Handle("/goroutine", pprof.Handler("goroutine"))
+	r.Handle("/heap", pprof.Handler("heap"))
+	r.Handle("/threadcreate", pprof.Handler("threadcreate"))
+	r.Handle("/block", pprof.Handler("block"))
 
 	go func() {
 		var memory runtime.MemStats
