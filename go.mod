@@ -1,4 +1,4 @@
-module github.com/asmyasnikov/go-debug-handelrs
+module github.com/asmyasnikov/go-debug-handlers
 
 go 1.14
 
